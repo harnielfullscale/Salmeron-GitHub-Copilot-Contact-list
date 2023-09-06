@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\opis\Salmeron Files\Fullscale\GitHub Copilot\BE\venv"
+VIRTUAL_ENV="C:\opis\Salmeron Files\Fullscale\GitHub Copilot\GitHub Copilot\BE\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

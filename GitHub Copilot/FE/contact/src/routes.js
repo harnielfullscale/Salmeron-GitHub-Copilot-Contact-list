@@ -7,6 +7,7 @@ import SimpleLayout from './layouts/simple';
 import ContactList from './pages/Contact/ContactList';
 import Page404 from './pages/Page404';
 import ContactCreate from './pages/Contact/ContactCreate';
+import ContactDetails from './pages/Contact/ContactDetails';
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +20,7 @@ export default function Router() {
         { element: <Navigate to="/contact-list" />, index: true },
         { path: 'contact-list', element: <ContactList /> },
         { path: 'contact-create', element: <ContactCreate /> },
+        { path: 'contact-detail', element: <ContactDetails /> },
       ],
     },
     {

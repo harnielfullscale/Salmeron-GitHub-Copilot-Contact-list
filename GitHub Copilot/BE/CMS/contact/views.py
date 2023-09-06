@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
 # Create a view function that will return a list of contacts using @api_view decorator with validation from serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,10 +8,12 @@ from .serializers import ContactSerializer
 
 @api_view(['GET', 'POST'])
 def contacts_list(request):
+    # Retrieve List Method
     if request.method == 'GET':
         contacts = Contact.objects.all()
         serializer = ContactSerializer(contacts, many=True)
-        return Response(serializer.data, 200)
+        return Response({"results": serializer.data, "page": 0, "total_pages": 0, "entries_per_page": 10}, 200)
+    # Create Method
     elif request.method == 'POST':
         serializer = ContactSerializer(data=request.data)
         if serializer.is_valid():

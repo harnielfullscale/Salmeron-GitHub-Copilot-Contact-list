@@ -1,8 +1,11 @@
-// Create a create contact page with name, email, phone, and address fields. Add a button to submit the form. On submit, the form data should be sent to the backend API. If the API call is successful, redirect the user to the contact list page. If the API call fails, show an error message to the user. using "react": "^18.2.0"
+// Create a contact details page using MUI
+// Create a contact details page using MUI. The page should display the contact details of the selected contact. The page should have a button to edit the contact details. On click of the edit button, the user should be redirected to the edit contact page. using "react": "^18.2.0"
+// // Path: contact/src/pages/Contact/ContactDetails.js
 /* eslint-disable camelcase */
-//
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import React, { useState, useEffect } from 'react';
+
+import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 // material
 import { Card, Container, CardContent, CardHeader, TextField, Stack, Box, Typography, Button } from '@mui/material';
@@ -13,11 +16,10 @@ import Iconify from '../../components/iconify';
 import ContactMgr from './ContactMgr';
 
 // ----------------------------------------------------------------------
+const { getContact, updateContact } = ContactMgr;
 
-const { createContact } = ContactMgr;
-
-const ContactCreate = () => {
-  const navigate = useNavigate();
+const ContactDetails = () => {
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -39,7 +41,7 @@ const ContactCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const response = await createContact(JSON.stringify(formData));
+    const response = await updateContact(id, JSON.stringify(formData));
     console.log(response);
 
     if (response.response?.status === 400) {
@@ -53,41 +55,35 @@ const ContactCreate = () => {
         return error;
       });
     } else {
-      setMessage('Contact Created Successfully');
+      setMessage('Contact Updated Successfully');
       setSeverity('success');
     }
     setOpen(true);
     setLoading(false);
-
-    // navigate('/dashboard/contact-list', { replace: true });
   };
-  return (
-    <Box>
-      <Helmet>
-        <title> Contact List</title>
-      </Helmet>
 
-      <Container maxWidth="xl">
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Contact Create
-          </Typography>
-          <Box>
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="flat-color-icons:cancel" />}
-              sx={{ marginLeft: 2 }}
-              onClick={() => {
-                navigate('/contact-list', { replace: true });
-              }}
-              color="error"
-            >
-              Cancel
-            </Button>
-          </Box>
-        </Stack>
+  useEffect(() => {
+    const fetchContact = async () => {
+      const response = await getContact(id);
+      console.log(response);
+      setFormData({
+        name: response.data.name,
+        email: response.data.email,
+        contact_number: response.data.contact_number,
+        address: response.data.address,
+      });
+    };
+    fetchContact();
+  }, [id]);
+
+  return (
+    <>
+      <Helmet>
+        <title>Contact Details | Minimal-UI</title>
+      </Helmet>
+      <Container maxWidth="lg">
         <Card>
-          <CardHeader title="Create Contact" />
+          <CardHeader title="Contact Details" />
           <CardContent>
             <form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Stack spacing={3}>
@@ -128,7 +124,7 @@ const ContactCreate = () => {
                   variant="outlined"
                 />
                 <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-                  Create Contact
+                  Update Contact
                 </LoadingButton>
               </Stack>
             </form>
@@ -136,8 +132,8 @@ const ContactCreate = () => {
         </Card>
       </Container>
       <SnackBar open={open} setOpen={setOpen} message={message} severity={severity} />
-    </Box>
+    </>
   );
 };
 
-export default ContactCreate;
+export default ContactDetails;
