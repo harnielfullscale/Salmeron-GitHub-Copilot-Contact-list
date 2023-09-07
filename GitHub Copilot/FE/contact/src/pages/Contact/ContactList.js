@@ -149,7 +149,7 @@ export default function ContactList() {
 
   const retrieveData = async () => {
     const response = await getAllContacts();
-    setContactList(response);
+    setContactList(response.results);
   };
 
   useEffect(() => {
@@ -204,36 +204,53 @@ export default function ContactList() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    // {contactList.map((row) => {
-                    const { id, name, email, address, contact_number } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      // {contactList.map((row) => {
+                      const { id, name, email, address, contact_number } = row;
+                      const selectedUser = selected.indexOf(name) !== -1;
 
-                    return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
-                        </TableCell>
+                      return (
+                        <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          </TableCell>
 
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={`/assets/images/avatars/avatar_1.jpg`} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{address}</TableCell>
-                        <TableCell align="left">{contact_number}</TableCell>
-                        <TableCell align="right">
-                          <IconButton size="small" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            padding="none"
+                            sx={{ cursor: 'pointer' }}
+                            onClick={() => {
+                              console.log(id);
+                              navigate('/contact-detail', { state: { id }, replace: true });
+                            }}
+                          >
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              <Avatar alt={name} src={`/assets/images/avatars/avatar_11.jpg`} />
+                              <Typography variant="subtitle2" noWrap>
+                                {name}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{address}</TableCell>
+                          <TableCell align="left">{contact_number}</TableCell>
+                          <TableCell align="right">
+                            <IconButton size="small" color="inherit" onClick={handleOpenMenu}>
+                              <Iconify icon={'eva:more-vertical-fill'} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableCell colSpan={6}>
+                      <Typography variant="h4" textAlign="center">
+                        No Record
+                      </Typography>
+                    </TableCell>
+                  )}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />

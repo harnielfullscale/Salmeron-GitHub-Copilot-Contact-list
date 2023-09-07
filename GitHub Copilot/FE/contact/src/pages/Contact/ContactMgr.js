@@ -16,7 +16,7 @@ const ContactMgr = {
   // Get contact by id
   getContactById: async (id) => {
     try {
-      const response = await axios.get(`/contacts/${id}`);
+      const response = await axios.get(`/api/contact/${id}`);
       return response.data;
     } catch (error) {
       return error;
@@ -36,7 +36,17 @@ const ContactMgr = {
   // Update contact
   updateContact: async (id, contact) => {
     try {
-      const response = await axios.put(`/contacts/${id}`, contact);
+      const response = await axios.put(`/api/contact/${id}`, contact);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  },
+
+  // Delete contact
+  deleteContact: async (id) => {
+    try {
+      const response = await axios.delete(`/api/contact/${id}`);
       return response.data;
     } catch (error) {
       return error;

@@ -32,12 +32,12 @@ def contact_detail(request, pk):
         return Response({'error': 'Contact does not exist'}, status=404)
     if request.method == 'GET':
         serializer = ContactSerializer(contact)
-        return Response(serializer.data)
+        return Response({"data": serializer.data}, 200)
     elif request.method == 'PUT':
         serializer = ContactSerializer(contact, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response({"data": serializer.data}, 200)
         return Response(serializer.errors)
     elif request.method == 'DELETE':
         contact.delete()
